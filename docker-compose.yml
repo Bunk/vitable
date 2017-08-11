@@ -1,0 +1,24 @@
+version: "3"
+services:
+  ingress:
+    build: ./ingress
+    image: ingress:dev
+    links:
+      - ingress-store:db
+    depends_on:
+      - ingress-store
+    ports:
+      - 8080:8080
+    volumes:
+      - ./ingress:/go/src/github.com/bunk/vitable/ingress
+
+  ingress-store:
+    image: "mongodb:3.5"
+    # command: mongod --smallfiles --logpath=/dev/null # --quiet
+    ports:
+      - 27017:27017
+    volumes:
+      - ingress-data:/data/db
+
+volumes:
+  ingress-data:
